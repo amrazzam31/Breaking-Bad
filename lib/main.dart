@@ -1,8 +1,11 @@
 import 'package:breaking_bad/app_router.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() {
-  runApp( BreakingBadApp(appRouter: AppRouter(),));
+  runApp(BreakingBadApp(
+    appRouter: AppRouter(),
+  ));
 }
 
 class BreakingBadApp extends StatelessWidget {
@@ -11,9 +14,12 @@ class BreakingBadApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
-      debugShowCheckedModeBanner: false,
-      onGenerateRoute: appRouter.generateRoute,
+    return ScreenUtilInit(
+      designSize: const Size(375, 812),
+      builder: () => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        onGenerateRoute: appRouter.generateRoute,
+      ),
     );
   }
 }
