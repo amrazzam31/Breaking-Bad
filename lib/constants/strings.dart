@@ -1,3 +1,3 @@
-final baseUrl = 'https://www.breakingbadapi.com/api/';
+const baseUrl = 'https://www.breakingbadapi.com/api/';
 const charactersScreen = '/';
 const characterDetailsScreen = '/characterDetailsScreen';

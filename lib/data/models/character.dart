@@ -38,17 +38,5 @@ class Character {
         category = json['category'] as String?,
         betterCallSaulAppearance = json['better_call_saul_appearance'] as List?;
 
-  Map<String, dynamic> toJson() => {
-    'char_id' : charId,
-    'name' : name,
-    'birthday' : birthday,
-    'occupation' : occupation,
-    'img' : img,
-    'status' : status,
-    'nickname' : nickname,
-    'appearance' : appearance,
-    'portrayed' : portrayed,
-    'category' : category,
-    'better_call_saul_appearance' : betterCallSaulAppearance
-  };
+
 }

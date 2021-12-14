@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:breaking_bad/data/models/character.dart';
+import 'package:breaking_bad/data/models/quote.dart';
 import 'package:breaking_bad/data/repository/characters_repository.dart';
 import 'package:meta/meta.dart';
 
@@ -16,5 +17,10 @@ class CharactersCubit extends Cubit<CharactersState> {
       this.characters = characters;
     });
     return characters;
+  }
+  void getCharacterQuotes(String characterName) {
+    charactersRepository.getCharacterQuotes(characterName).then((quotes) {
+      emit(CharacterQuotesLoaded(quotes));
+    });
   }
 }
