@@ -1,7 +1,14 @@
+import 'dart:math';
+
+import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:breaking_bad/business_logic/characters_cubit.dart';
 import 'package:breaking_bad/constants/my_colors.dart';
 import 'package:breaking_bad/data/models/character.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'characters_screen.dart';
 
 class CharacterDetailsScreen extends StatelessWidget {
   const CharacterDetailsScreen({required this.character, Key? key})
@@ -33,8 +40,49 @@ class CharacterDetailsScreen extends StatelessWidget {
     );
   }
 
+  Widget checkIfQuotesAreLoaded(CharactersState state) {
+    if (state is CharacterQuotesLoaded) {
+      return displayRandomQuoteOrEmptySpace(state);
+    } else {
+      return const ShowLoadingIndicator();
+    }
+  }
+
+  Widget displayRandomQuoteOrEmptySpace(state) {
+    var quotes = (state).quotes;
+    if (quotes.length != 0) {
+      int randomQuoteIndex = Random().nextInt(quotes.length - 1);
+      return Center(
+        child: DefaultTextStyle(
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontSize: 20,
+            color: MyColors.myWhite,
+            shadows: [
+              Shadow(
+                blurRadius: 7,
+                color: MyColors.myYellow,
+                offset: Offset(0, 0),
+              )
+            ],
+          ),
+          child: AnimatedTextKit(
+            repeatForever: true,
+            animatedTexts: [
+              FlickerAnimatedText(quotes[randomQuoteIndex].quote),
+            ],
+          ),
+        ),
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    BlocProvider.of<CharactersCubit>(context).getCharacterQuotes(character.name! );
+
     return Scaffold(
       backgroundColor: MyColors.myGrey,
       body: CustomScrollView(
@@ -97,11 +145,19 @@ class CharacterDetailsScreen extends StatelessWidget {
                           : BuildDivider(
                               endIndent: 180.w,
                             ),
-                      SizedBox(height: 20.h,),
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      BlocBuilder<CharactersCubit, CharactersState>(
+                          builder: (context, state) {
+                        return checkIfQuotesAreLoaded(state);
+                      }),
                     ],
                   ),
                 ),
-                SizedBox(height: 400.h,),
+                SizedBox(
+                  height: 400.h,
+                ),
               ],
             ),
           ),

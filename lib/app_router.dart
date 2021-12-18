@@ -12,6 +12,7 @@ import 'data/web_services /characters_web_services.dart';
 class AppRouter {
   late CharactersRepository charactersRepository;
   late CharactersCubit charactersCubit;
+
   AppRouter() {
     charactersRepository = CharactersRepository(CharactersWebServices());
     charactersCubit = CharactersCubit(charactersRepository);
@@ -21,17 +22,22 @@ class AppRouter {
     switch (settings.name) {
       case charactersScreen:
         return MaterialPageRoute(
-          builder: (_) => BlocProvider(
-            create: (BuildContext context) => charactersCubit,
-            child: const CharactersScreen(),
-          ),
+          builder: (_) =>
+              BlocProvider(
+                create: (BuildContext context) => charactersCubit,
+                child: const CharactersScreen(),
+              ),
         );
       case characterDetailsScreen:
         final character = settings.arguments as Character;
         return MaterialPageRoute(
-          builder: (_) => CharacterDetailsScreen(
-            character: character,
-          ),
+          builder: (_) =>
+              BlocProvider(
+                create: (context) => CharactersCubit(charactersRepository),
+                child: CharacterDetailsScreen(
+                  character: character,
+                ),
+              ),
         );
     }
   }

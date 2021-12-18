@@ -13,9 +13,8 @@ class CharactersRepository {
         .toList();
   }
   Future<List<Quote>> getCharacterQuotes(String characterName) async {
-    final Quotes = await charactersWebServices.getCharacterQuotes(characterName);
-    return Quotes
-        .map((characterQuote) => Quote.fromJson(characterQuote))
-        .toList();
+    final quotes = await charactersWebServices.getCharacterQuotes(characterName);
+    return quotes.map((charQuotes) => Quote.fromJson(charQuotes)).toList();
+
   }
 }

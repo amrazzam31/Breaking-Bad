@@ -8,21 +8,16 @@ class Quote {
 } 
 */
 
-  int? quoteId;
-  String? quote;
-  String? author;
-  String? series;
+  late int quoteId;
+  late String quote;
+  late String author;
+  late String series;
 
-  Quote({
-    this.quoteId,
-    this.quote,
-    this.author,
-    this.series,
-  });
+
   Quote.fromJson(Map<String, dynamic> json) {
-    quoteId = json['quote_id']?.toInt();
-    quote = json['quote']?.toString();
-    author = json['author']?.toString();
-    series = json['series']?.toString();
+    quoteId = json['quote_id'].toInt();
+    quote = json['quote'].toString();
+    author = json['author'].toString();
+    series = json['series'].toString();
   }
 }

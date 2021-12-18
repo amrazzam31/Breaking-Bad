@@ -4,6 +4,7 @@ import 'package:breaking_bad/data/models/character.dart';
 import 'package:breaking_bad/presentation/widgets/characters_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_offline/flutter_offline.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CharactersScreen extends StatefulWidget {
@@ -112,17 +113,9 @@ class _CharactersScreenState extends State<CharactersScreen> {
           allCharacters = (state).characters;
           return _buildLoadedListWidgets();
         } else {
-          return _showLoadingIndicator();
+          return const ShowLoadingIndicator();
         }
       },
-    );
-  }
-
-  Widget _showLoadingIndicator() {
-    return const Center(
-      child: CircularProgressIndicator(
-        color: MyColors.myYellow,
-      ),
     );
   }
 
@@ -141,11 +134,11 @@ class _CharactersScreenState extends State<CharactersScreen> {
 
   Widget _buildCharactersList() {
     return GridView.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        mainAxisSpacing: 1,
-        crossAxisSpacing: 1,
-        childAspectRatio: 2 / 3,
+        mainAxisSpacing: 1.h,
+        crossAxisSpacing: 1.w,
+        childAspectRatio: 2.h / 3.w,
       ),
       shrinkWrap: true,
       physics: const ClampingScrollPhysics(),
@@ -175,6 +168,7 @@ class _CharactersScreenState extends State<CharactersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: MyColors.myGrey,
       appBar: AppBar(
         backgroundColor: MyColors.myYellow,
         leading: _isSearching
@@ -185,7 +179,64 @@ class _CharactersScreenState extends State<CharactersScreen> {
         title: _isSearching ? _buildSearchField() : _buildAppBarTitle(),
         actions: _buildAppBarActions(),
       ),
-      body: _buildBlocWidget(),
+      body: OfflineBuilder(
+        connectivityBuilder: (
+          BuildContext context,
+          ConnectivityResult connectivity,
+          Widget child,
+        ) {
+          final bool connected = connectivity != ConnectivityResult.none;
+          if (connected) {
+            return _buildBlocWidget();
+          } else {
+            return const BuildNoInternetWidget();
+          }
+        },
+        child: const  ShowLoadingIndicator(),
+      ),
+    );
+  }
+}
+
+class ShowLoadingIndicator extends StatelessWidget {
+  const ShowLoadingIndicator({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: CircularProgressIndicator(
+        color: MyColors.myYellow,
+      ),
+    );
+  }
+}
+
+class BuildNoInternetWidget extends StatelessWidget {
+  const BuildNoInternetWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        color: Colors.white,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: 20.h,
+            ),
+            Text(
+              "Can't connect .. Check internet!",
+              style: TextStyle(
+                fontSize: 22.sp,
+                fontWeight: FontWeight.bold,
+                color: MyColors.myGrey,
+              ),
+            ),
+            Image.asset('assets/images/no_internet.png'),
+          ],
+        ),
+      ),
     );
   }
 }
